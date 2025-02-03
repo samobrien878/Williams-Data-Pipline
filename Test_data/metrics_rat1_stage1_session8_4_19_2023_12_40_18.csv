@@ -1,0 +1,23 @@
+Trial num,HH time,Latency to corr sample,Latency to corr match,Corr sample port num,Trial type,Target odor num,Target odor name,Target odor concentration,Num pokes corr sample,Time in corr sample,Inc sample port num,Num pokes inc sample,Time in inc sample,False pos inc sample,Corr match port num,Corr match odor num,Corr match odor name,Match odor concentration,Num pokes corr match,Time in corr match,Inc match 1 port num,Inc match 1 odor num,Inc match 1 odor name,Num pokes inc match 1,Time in inc match 1,False pos inc match 1,Inc match 2 port num,Inc match 2 odor num,Inc match 2 odor name,Num pokes inc match 2,Time in inc match 2,False pos inc match 2
+1,4,0,0,8,normal,8,TNT+RDX,1,2,3.818,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+2,4,10.602,0,8,normal,8,TNT+RDX,1,1,6.158,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+3,4,0,0,9,normal,8,TNT+RDX,1,0,0,8,2,18.402,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+4,4,0,0,9,normal,8,TNT+RDX,1,0,0,8,1,9.08199999999999,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+5,4,25.1,0,8,normal,8,TNT+RDX,1,1,6.97200000000001,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+6,4,27.033,0,8,normal,8,TNT+RDX,1,1,7.00399999999999,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+7,4,10.808,0,8,normal,8,TNT+RDX,1,1,6.572,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+8,4,4.91999999999999,0,8,normal,8,TNT+RDX,1,2,5.87200000000001,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+9,4,58.209,0,8,normal,8,TNT+RDX,1,1,6.12399999999997,9,2,13.182,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+10,4,8.938,0,8,normal,8,TNT+RDX,1,1,7.00399999999996,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+11,4,8.783,0,9,normal,8,TNT+RDX,1,1,7.00599999999997,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+12,4,5.78,0,9,normal,8,TNT+RDX,1,1,5.88800000000003,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+13,4,10.643,0,8,normal,8,TNT+RDX,1,1,5.88399999999996,9,1,0.52800000000002,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+14,4,27.314,0,8,normal,8,TNT+RDX,1,1,7.00299999999999,9,2,10.122,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+15,4,11.446,0,8,normal,8,TNT+RDX,1,3,10.138,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+16,4,22.616,0,8,normal,8,TNT+RDX,1,1,6.685,9,2,13.102,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+17,4,23.301,0,9,normal,8,TNT+RDX,1,1,7.00400000000002,8,1,11.771,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+18,4,10.222,0,8,normal,8,TNT+RDX,1,1,7.00399999999996,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+19,4,13.853,0,8,normal,8,TNT+RDX,1,1,7.00400000000002,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+20,4,9.688,0,8,normal,8,TNT+RDX,1,1,5.72500000000002,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+21,4,53.576,0,9,normal,8,TNT+RDX,1,1,7.00400000000002,8,4,19.797,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+22,4,7.059,0,8,normal,8,TNT+RDX,1,1,6.83399999999995,9,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0

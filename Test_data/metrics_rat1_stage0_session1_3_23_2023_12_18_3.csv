@@ -1,0 +1,6 @@
+Trial num,HH time,Latency to corr sample,Corr sample port num,Num pokes corr sample,Time in corr sample,Time in corr port after reward,Inc sample port num,Num pokes inc sample,Time in inc sample
+1,0.2,46.947,8,2,0.545999999999992,0.332999999999991,6,0,0
+2,0.2,0.247,8,1,0.513000000000005,0.289999999999999,6,0,0
+3,0.2,185.173,6,2,0.900999999999982,0.686999999999983,8,0,0
+4,0.2,8.541,8,1,1.22899999999998,1.00999999999999,6,0,0
+5,0.2,0,0,0,0,0,0,0,0

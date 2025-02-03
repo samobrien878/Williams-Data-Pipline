@@ -1,0 +1,15 @@
+Trial num,HH time,Latency to corr sample,Latency to corr match,Corr sample port num,Trial type,Target odor num,Target odor name,Target odor concentration,Num pokes corr sample,Time in corr sample,Inc sample port num,Num pokes inc sample,Time in inc sample,False pos inc sample,Corr match port num,Corr match odor num,Corr match odor name,Match odor concentration,Num pokes corr match,Time in corr match,Inc match 1 port num,Inc match 1 odor num,Inc match 1 odor name,Num pokes inc match 1,Time in inc match 1,False pos inc match 1,Inc match 2 port num,Inc match 2 odor num,Inc match 2 odor name,Num pokes inc match 2,Time in inc match 2,False pos inc match 2
+1,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,3,9.741,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+2,4,21.069,0,9,normal,9,TNT+AMM,1,1,7.005,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+3,4,10.786,0,9,normal,9,TNT+AMM,1,1,6.33399999999999,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+4,4,9.796,0,9,normal,9,TNT+AMM,1,1,6.43099999999998,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+5,4,4.357,0,9,normal,9,TNT+AMM,1,1,5.679,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+6,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,5,7.35200000000003,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+7,4,11.016,0,9,normal,9,TNT+AMM,1,1,6.23900000000003,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+8,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,3,19.076,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+9,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,3,14.08,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+10,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,1,8.94200000000001,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+11,4,0,0,9,normal,9,TNT+AMM,1,0,0,8,0,0,0,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+12,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,4,19.612,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+13,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,3,16.9090000000001,2,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
+14,4,0,0,8,normal,9,TNT+AMM,1,0,0,9,3,10.1109999999999,1,0,0,none,1,0,0,0,0,none,0,0,0,0,0,none,0,0,0
