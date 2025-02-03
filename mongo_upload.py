@@ -6,7 +6,7 @@ import csv
 import re
 
 # MongoDB connection details
-MONGO_URI = "mongodb+srv://obriensam878:1234@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://obriensam878:____@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "metrics"
 
