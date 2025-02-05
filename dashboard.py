@@ -25,4 +25,6 @@ app.layout = html.Div([
     html.H1("Williams Lab Data"),
     dcc.Dropdown(
         id = "ratID"
-    )
+    ),
+    dcc.Graph(id = 'graph')
+])
