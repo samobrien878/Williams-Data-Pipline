@@ -19,3 +19,10 @@ def get_data():
     df = pd.DataFrame(data)
     return df
 
+app = dash.Dash(__name__)
+
+app.layout = html.Div([
+    html.H1("Williams Lab Data"),
+    dcc.Dropdown(
+        id = "ratID"
+    )
