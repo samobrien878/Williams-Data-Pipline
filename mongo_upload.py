@@ -113,7 +113,11 @@ def averages(data_dict):
     daily_avg.columns = ['Date'] + [f'{col}_avg' for col in include[3:]]
     return daily_avg
 
-
+def add_summary(data_dict):
+    daily_avg = averages(data_dict)
+    df = pd.DataFrame(data_dict)
+    df = df.merge(daily_avg, on='Date', how = 'left')
+    return df.to_dict(orient="records")
     
 
 a = make_dict(r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs\metrics_rat1_stage2_session15_11_29_2023_13_45_50.csv")
