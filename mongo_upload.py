@@ -9,6 +9,7 @@ import time
 MONGO_URI = "mongodb+srv://____:____@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "metrics"
+SUMMARY_COLLECTION_NAME = "summary"
 folder_location = r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs" #replace for lab computers:
 
 #connect to MongoDB:
@@ -16,6 +17,7 @@ try:
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]
     collection = db[COLLECTION_NAME]
+    summary_collection = db[SUMMARY_COLLECTION_NAME]
     print("Connected to MongoDB.")
 except Exception as e:
     print(f"Failed to connect to MongoDB: {e}")
@@ -113,7 +115,9 @@ print(a)
 #     for file_name in os.listdir(folder_location):
 #         if file_name.startswith("metrics"):
 #             dict = make_dict(file_name)
+#             summary = add_summary(data_dict)
 #             collection.insert_many(dict)
+#             summary_collection.insert_one(summary)
 #             print(f"Uploaded {file_name}")
                 
 
