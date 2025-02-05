@@ -111,7 +111,7 @@ def averages(data_dict):
     df.loc[df['Stage'] > 0, 'HH Time'] = pd.NA
 
     daily_avg = df.groupby(df['Date'])[include[3:]].mean().reset_index()
-    daily_avg.columns = ['Date'] + [f'{col}_avg' for col in include[3:]]
+    daily_avg.columns = ['Date'] + ['RatID'] + ['Stage'] + [f'{col}_avg' for col in include[3:]]
     return daily_avg
 
 def add_summary(data_dict):
