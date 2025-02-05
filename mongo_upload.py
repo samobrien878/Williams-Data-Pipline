@@ -91,6 +91,7 @@ def make_dict(file_path):
                 record['TP'] = 0
                 if record['Time in corr sample'] >= 4 and record['Time in corr match'] >= 4:
                     record['TP'] = record['TP'] + 2
+                # did we want this to increment 3 if the time in corr sample was above 4 secs? 
                 if record['Time in corr sample'] >= 4:
                     record['TP'] = record['TP'] + 1
                     
@@ -116,12 +117,15 @@ def averages(data_dict):
 def add_summary(data_dict):
     daily_avg = averages(data_dict)
     df = pd.DataFrame(data_dict)
-    df = df.merge(daily_avg, on='Date', how = 'left')
-    return df.to_dict(orient="records")
-    
+    summary_dict = {
+        'daily_avg': daily_avg.to_dict(orient='records')
+    }
+    return summary_dict
 
-a = make_dict(r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs\metrics_rat1_stage2_session15_11_29_2023_13_45_50.csv")
-print(a)
+a = make_dict(r"Test_data\metrics_rat1_stage2_session15_11_29_2023_13_45_50.csv")
+#C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs\metrics_rat1_stage2_session15_11_29_2023_13_45_50.csv
+print(add_summary(a))
+
 
 
 #upload mongo
