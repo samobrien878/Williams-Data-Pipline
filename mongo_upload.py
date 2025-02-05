@@ -110,8 +110,8 @@ def averages(data_dict):
     #HH Time doesn't matter after stage 0
     df.loc[df['Stage'] > 0, 'HH Time'] = pd.NA
 
-    daily_avg = df.groupby(df['Date'])[include[3:]].mean().reset_index()
-    daily_avg.columns = ['Date'] + ['RatID'] + ['Stage'] + [f'{col}_avg' for col in include[3:]]
+    daily_avg = df.groupby(['Date', 'RatID', 'Stage'])[include[3:]].mean().reset_index()
+    daily_avg.columns = include[0:3] + [f'{col}_avg' for col in include[3:]]
     return daily_avg
 
 def add_summary(data_dict):
