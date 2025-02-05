@@ -23,3 +23,10 @@ gauth.SaveCredentialsFile("mycreds.txt")
 GoogleDrive = GoogleDrive(gauth)    
 
 #look into www.blomp.com for storage of videos
+
+def upload(file_path):
+    file_name = GoogleDrive.CreateFile({'title': file_name})
+    gfile.SetContentFile(file_path)
+    gfile.Upload()
+    print(f"Uploaded {file_path} to Google Drive.")
+    
