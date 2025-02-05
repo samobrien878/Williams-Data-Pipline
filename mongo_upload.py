@@ -100,8 +100,18 @@ def make_dict(file_path):
 
     return data_dict
 
-# def add_summary(dict):
-#     for session in dict:
+def averages(data_dict):
+    include = ['Date', 'RatID', 'Stage', 'HH Time', 'Latency to corr sample', 
+               'Latency to corr match', 'Num pokes corr sample', 'Time in corr sample', 
+               'Num pokes inc sample','Time in inc sample', 'Num pokes corr match', 'Time in corr match']
+    df = pd.DataFrame(data_dict)
+
+    #HH Time doesn't matter after stage 0
+    df.loc[df['Stage'] > 0, 'HH Time'] = pd.NA
+
+    daily_avg = df.groupby(df['Date'])[include[3:]].mean().reset_index()
+    daily_avg.columns = ['Date'] + [f'{col}_avg' for col in include[3:]]
+    return daily_avg
 
 
     
