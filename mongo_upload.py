@@ -54,6 +54,7 @@ def make_dict(file_path):
         df = df[df["Date"] >= datetime(2023,1 ,8 )] 
         data_dict = df.to_dict(orient="records")
         return data_dict
+#TODO: calculate false positives, true positives, etc. and add to dictionary
 
 #upload mongo
 def upload(folder_location):
