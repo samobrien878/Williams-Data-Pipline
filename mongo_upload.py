@@ -76,7 +76,7 @@ def make_dict(file_path):
             record['FP'] = record.get('False pos inc sample', 0) if record['Latency to corr sample'] != 0 else 0
             record['Timeouts'] = sum(1 for latency in session_df['Latency to corr sample'] if latency == 0)
             record['Odor_FP'] = "Blank" if record['FP'] > 0 else None
-            record['True_Positives'] = int(record['False pos inc sample'] == 0 and record['Latency to corr sample'] != 0)
+            record['TP'] = int(record['False pos inc sample'] == 0 and record['Latency to corr sample'] != 0)
 
         # Stage 2 and 3 variables
         elif record['Stage'] in [2, 3]:
@@ -124,8 +124,6 @@ def make_dict(file_path):
 
     return data_dict
 
-a = make_dict(r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs\metrics_rat1_stage0_session3_4_4_2023_15_47_27.csv")
-print(a)
 
 def averages(data_dict):
     from collections import Counter
