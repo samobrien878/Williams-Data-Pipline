@@ -6,7 +6,7 @@ import plotly.express as px
 import pandas as pd
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://____:____@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://joy_williamslab:9876@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Daily summaries"
 
@@ -14,7 +14,7 @@ client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
 
-df = pd.DataFrame([day for doc in collection.find() for day in doc.get("daily_avg", [])])
+df = pd.DataFrame([day for doc in collection.find() for day in doc.get("daily_summary", [])])
 
 # Ensure Date column is in datetime format
 df["Date"] = pd.to_datetime(df["Date"])
@@ -28,12 +28,20 @@ stages = sorted(df["Stage"].unique())
 stage_options = [{"label": f"Stage {stage}", "value": stage} for stage in stages]
 
 # Metrics available for the Y-axis selection
-metrics = [
-    "FP_total", "S_FP_total", "M_FP_total",  # False Positives
-    "TP_total",  # True Positives
-    "Latency to corr sample_avg", "Latency to corr match_avg"  # Latency Metrics
-]
+metric_labels = {"FP_total": "Total False Positives",
+                 "S_FP_total": "Total Sample False Positives",
+                 "M_FP_total": "Total Match False Positives",
+                 "TP_total": "Total True Positives",
+                 "Latency to corr sample_avg": "Average Latency to Correct Sample",
+                 "Latency to corr match_avg": "Average Latency to Correct Match",
+                 "Num pokes corr sample_avg": "Average Pokes to Correct Sample",
+                 "Time in corr sample_avg": "Average Time in Correct Sample",
+                 "Num pokes inc sample_avg": "Average Pokes to Incorrect Sample",
+                 "Num pokes corr match_avg": "Average Pokes to Correct Match",
+                 "Time in corr match_avg": "Average Time in Correct Match"}
 
+metric_options = [{"label": label, "value": metric} for metric, label in metric_labels.items()]
+                 
 # Initialize Dash App
 app = dash.Dash(__name__)
 
@@ -78,7 +86,7 @@ app.layout = html.Div([
             html.H3("Select Metric"),
             dcc.Dropdown(
                 id="metric-dropdown",
-                options=[{"label": metric, "value": metric} for metric in metrics],
+                options= metric_options,
                 value="FP_total",
                 clearable=False
             ),
