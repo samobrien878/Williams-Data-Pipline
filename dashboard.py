@@ -6,7 +6,7 @@ import plotly.express as px
 import pandas as pd
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://joy_williamslab:9876@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://_____@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Daily summaries"
 
