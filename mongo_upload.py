@@ -8,11 +8,11 @@ import time
 import chardet  # Added for encoding detection
 from collections import Counter
 
-MONGO_URI = "mongodb+srv://:@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://joy_williamslab:9876@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
-folder_location = r"C:\Senior Thesis\DBs"
+folder_location = r"C:\Users\joyki\Documents\Documents\Williams_Lab\Williams-Data-Pipline\Test_data"
 
 # Connect to MongoDB
 try:
@@ -125,18 +125,18 @@ def averages(data_dict):
         cleaned_lst = [item for item in lst if item and item != ""]
         return Counter(cleaned_lst).most_common(1)[0][0] if cleaned_lst else None
 
-    include = ["Date", "RatID", "Stage", "HH Time", "Latency to corr sample",
+    include = ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP", "HH Time", "Latency to corr sample",
                "Latency to corr match", "Num pokes corr sample", "Time in corr sample", 
                "Num pokes inc sample", "Time in inc sample", "Num pokes corr match", 
                "Time in corr match"]
 
     df = pd.DataFrame(data_dict)
-    available_columns = [col for col in include[3:] if col in df.columns]
+    available_columns = [col for col in include[7:] if col in df.columns]
     
     df.loc[df["Stage"] > 0, "HH Time"] = pd.NA
 
-    daily_avg = df.groupby(["Date", "RatID", "Stage"])[available_columns].mean().reset_index()
-    daily_avg.columns = ["Date", "RatID", "Stage"] + [f"{col}_avg" for col in available_columns]
+    daily_avg = df.groupby(["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP"])[available_columns].mean().reset_index()
+    daily_avg.columns = ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP"] + [f"{col}_avg" for col in available_columns]
 
     return daily_avg
 
