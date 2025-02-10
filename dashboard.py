@@ -14,7 +14,7 @@ client = MongoClient(MONGO_URI)
 db = client[DB_NAME]
 collection = db[COLLECTION_NAME]
 
-df = pd.DataFrame([day for doc in collection.find() for day in doc.get("daily_summary", [])])
+df = pd.DataFrame([day for doc in collection.find() for day in doc.get("daily_avg", [])])
 
 # Ensure Date column is in datetime format
 df["Date"] = pd.to_datetime(df["Date"])
