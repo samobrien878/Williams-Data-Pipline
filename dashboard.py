@@ -1,183 +1,192 @@
-import dash
-from pymongo import MongoClient
-from dash import dcc, html, dash_table
-from dash.dependencies import Input, Output
-import plotly.express as px
 import pandas as pd
+from pymongo import MongoClient
+from datetime import datetime
+import os
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+import time
+import chardet  # Added for encoding detection
+from collections import Counter
+
+MONGO_URI = "mongodb+srv://____:____@serverlessinstance0.gqqyx4s.mongodb.net/"
+DB_NAME = "training_data"
+COLLECTION_NAME = "Raw_Data"
+SUMMARY_COLLECTION_NAME = "Daily summarys"
+folder_location = r"C:\Senior Thesis\DBs"
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://:@serverlessinstance0.gqqyx4s.mongodb.net/"
-DB_NAME = "training_data"
-COLLECTION_NAME = "Daily summarys"
-
-client = MongoClient(MONGO_URI)
-db = client[DB_NAME]
-collection = db[COLLECTION_NAME]
-documents = collection.find()
-
-df = pd.DataFrame([entry for doc in collection.find() for entry in doc.get("daily_summary", [])])
-
-# Ensure Date column is in datetime format
-df["Date"] = pd.to_datetime(df["Date"])
-
-# Get unique RatIDs
-rat_ids = df["RatID"].unique()
-rat_id_options = [{"label": "All RatIDs", "value": "all"}] + [{"label": f"Rat {rat}", "value": rat} for rat in rat_ids]
-
-# Get unique Stages (No "All Stages" Option)
-stages = sorted(df["Stage"].unique())
-stage_options = [{"label": f"Stage {stage}", "value": stage} for stage in stages]  # No "All Stages"
-
-# Metrics available for the Y-axis selection
-metrics = [
-    "FP_total", "S_FP_total", "M_FP_total",  # False Positives
-    "TP_total",  # True Positives
-    "Latency to corr sample_avg", "Latency to corr match_avg"  # Latency Metrics
-]
-
-# False Positive Metrics (for conditional display of Timeout widget)
-false_positive_metrics = ["FP_total", "S_FP_total", "M_FP_total"]
-
-# Initialize Dash App
-app = dash.Dash(__name__)
-
-app.layout = html.Div([
-    html.H1("Rat Behavior Analysis Dashboard", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px"}),
-
-    # Data Table
-    html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px"}),
-    dash_table.DataTable(
-        id="data-table",
-        columns=[{"name": col, "id": col} for col in df.columns],
-        data=df.to_dict("records"),
-        page_size=10,
-        style_table={"overflowX": "auto"},
-        style_header={"fontWeight": "bold", "backgroundColor": "#e6e6e6"},
-        style_cell={"textAlign": "center", "padding": "10px"}
-    ),
-
-    # Dropdown Filters
-    html.Div([
-        html.Div([
-            html.H3("Select RatID"),
-            dcc.Dropdown(
-                id="ratid-dropdown",
-                options=rat_id_options,
-                value="all",  # Default selection is "All RatIDs"
-                clearable=False
-            ),
-        ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
-
-        html.Div([
-            html.H3("Select Stage"),
-            dcc.Dropdown(
-                id="stage-dropdown",
-                options=stage_options,
-                value=stages[0],  # Default to first available stage
-                clearable=False
-            ),
-        ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
-
-        html.Div([
-            html.H3("Select Metric"),
-            dcc.Dropdown(
-                id="metric-dropdown",
-                options=[{"label": metric, "value": metric} for metric in metrics],
-                value="FP_total",  # Default selection
-                clearable=False
-            ),
-        ], style={"width": "32%", "display": "inline-block", "padding": "10px"})
-    ], style={"display": "flex", "justifyContent": "space-between"}),
-
-    # Time Range Selection
-    html.H3("Select Time Range"),
-    dcc.RadioItems(
-        id="time-range",
-        options=[
-            {"label": "Last 7 Entries", "value": 7},
-            {"label": "Last 14 Entries", "value": 14},
-            {"label": "Last 30 Entries", "value": 30}
-        ],
-        value=14,  # Default to last 14 rows
-        inline=True,
-        style={"fontSize": "18px", "marginBottom": "20px"}
-    ),
-
-    # Line Graph and Widgets Layout
-    html.Div([
-        dcc.Graph(id="line-graph", style={"width": "80%", "height": "600px", "display": "inline-block"}),
-        
-        html.Div([
-            html.Div(id="timeout-widget", style={"textAlign": "center", "fontSize": "22px", "marginBottom": "20px"}),
-            html.Div(id="hover-widget", style={"textAlign": "center", "fontSize": "22px"})  # Hover widget
-        ], style={"width": "18%", "display": "inline-block", "verticalAlign": "top"})
-    ], style={"display": "flex", "justifyContent": "space-between"}),
-
-])
+try:
+    client = MongoClient(MONGO_URI)
+    db = client[DB_NAME]
+    collection = db[COLLECTION_NAME]
+    summary_collection = db[SUMMARY_COLLECTION_NAME]
+    print("Connected to MongoDB.")
+except Exception as e:
+    print(f"Failed to connect to MongoDB: {e}")
+    exit(1)
 
 
-# Callback to update line graph based on metric selection, RatID filter, Stage filter, and time range
-@app.callback(
-    Output("line-graph", "figure"),
-    Output("timeout-widget", "children"),  # Output for the Timeout Widget
-    Output("hover-widget", "children"),  # Output for the Hover Widget
-    [Input("metric-dropdown", "value"),
-     Input("ratid-dropdown", "value"),
-     Input("stage-dropdown", "value"),
-     Input("time-range", "value")]
-)
-def update_graph(selected_metric, selected_ratid, selected_stage, selected_rows):
-    # Filter by Stage
-    filtered_df = df[df["Stage"] == selected_stage]
+# Parse all necessary info from filenames
+def parse_filename(filename):
+    parts = filename.split("_")
+    dates = parts[4:7]
+    month, day = int(dates[0]), int(dates[1])
+    year = int(dates[2].split(".")[0])
 
-    # Filter by RatID
-    if selected_ratid != "all":
-        filtered_df = filtered_df[filtered_df["RatID"] == selected_ratid]
+    rat_id = int(parts[1][3:]) if 0 < int(parts[1][3:]) < 20 else None
+    session = int(parts[3][7:])
+    stage = int(parts[2][5:])
 
-    # Sort and get last N rows
-    filtered_df = filtered_df.sort_values(by="Date").tail(selected_rows)
-
-    # Create line graph
-    fig = px.line(filtered_df, x="Date", y=selected_metric, color="RatID" if selected_ratid == "all" else None,
-                  title=f"{selected_metric} Over Last {selected_rows} Entries | "
-                        f"RatID: {'All' if selected_ratid == 'all' else selected_ratid} | Stage: {selected_stage}",
-                  labels={"Date": "Date", selected_metric: "Value"},
-                  markers=True,
-                  template="plotly_white")
-
-    fig.update_layout(
-        title_font_size=24,
-        xaxis_title="Date",
-        yaxis_title="Value",
-        xaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),
-        yaxis=dict(showgrid=True, gridwidth=1, gridcolor='lightgray'),
-        font=dict(size=16),
-        hovermode="x unified"
-    )
-
-    # Compute Average Timeout Widget
-    if selected_metric in false_positive_metrics:
-        avg_timeout_per_row = round(filtered_df["Timeout_total"].mean(), 2)  # Avg Timeouts per row
-        timeout_text = f"Avg Timeouts per Entry: {avg_timeout_per_row}"
-        timeout_widget = html.Div([
-            html.H4("Timeout Info", style={"fontSize": "22px"}),
-            html.P(timeout_text, style={"fontWeight": "bold", "color": "#d9534f", "fontSize": "20px"})  # Red color for emphasis
-        ])
-    else:
-        timeout_widget = ""
-
-    # Hover Widget for Identifying RatID
-    if selected_ratid == "all":
-        hover_widget = html.Div([
-            html.H4("Hover Over Points", style={"fontSize": "22px"}),
-            html.P("Hover over the graph to see RatID", style={"fontSize": "18px"})
-        ])
-    else:
-        hover_widget = ""  # Hide if a specific RatID is selected
-
-    return fig, timeout_widget, hover_widget
+    return [rat_id, session, stage, month, day, year]
 
 
-# Run the App
-if __name__ == "__main__":
-    app.run_server(debug=True)
+# Function to detect encoding dynamically
+def detect_encoding(file_path, num_bytes=10000):
+    """Detect the encoding of a file by reading a sample of bytes."""
+    with open(file_path, "rb") as f:
+        raw_data = f.read(num_bytes)  # Read first `num_bytes` of the file
+    result = chardet.detect(raw_data)  # Detect encoding
+    return result["encoding"]  # Return detected encoding
+
+
+# Function to load CSV or Excel file dynamically
+def load_data(file_path):
+    """Load CSV or Excel file dynamically, ensuring proper encoding detection for CSVs."""
+    file_ext = os.path.splitext(file_path)[1].lower()
+
+    try:
+        if file_ext == ".csv":
+            encoding = detect_encoding(file_path)  # Detect encoding dynamically
+            df = pd.read_csv(file_path, encoding=encoding)  # Removed 'errors' argument for compatibility
+
+        elif file_ext in [".xls", ".xlsx"]:
+            df = pd.read_excel(file_path, engine="openpyxl")  # Read Excel files properly
+
+        else:
+            raise ValueError(f"Unsupported file format: {file_ext}")
+
+    except Exception as e:
+        print(f"Error reading {file_path}: {e}")
+        return None  # Return None to prevent further processing of the file
+
+    return df
+
+
+# Function to process data into a dictionary format for MongoDB
+def make_dict(file_path):
+    df = load_data(file_path)  # Uses new load_data function with encoding detection
+    if df is None:
+        return []
+
+    metadata = parse_filename(os.path.basename(file_path))
+    df['RatID'] = metadata[0]
+    df['Session'] = metadata[1]
+    df['Stage'] = metadata[2]
+    df['Date'] = datetime(metadata[5], metadata[3], metadata[4])
+
+    # Filter data based on date
+    df = df[df["Date"] >= datetime(2023, 1, 8)]
+    data_dict = df.to_dict(orient="records")
+
+    for record in data_dict:
+        session_df = df[df['Session'] == record['Session']]
+
+        # Initialize default values
+        record['TP'], record['FP'], record['S_FP'], record['M_FP'], record['Timeout'] = 0, 0, 0, 0, 1
+        record['S_Odor_FP'], record['M_Odor_FP'] = None, None
+
+        # HH variables (Stage 0)
+        if record['Stage'] == 0:
+            record['Max_HH'] = max(session_df['HH time'])
+
+    return data_dict
+
+
+# Function to compute daily averages for each rat
+def averages(data_dict):
+    def most_common(lst):
+        cleaned_lst = [item for item in lst if item and item != '']  # Ignore None and empty strings
+        return Counter(cleaned_lst).most_common(1)[0][0] if cleaned_lst else None
+
+    include = ['Date', 'RatID', 'Stage', 'HH Time', 'Latency to corr sample',
+               'Latency to corr match', 'Num pokes corr sample', 'Time in corr sample', 
+               'Num pokes inc sample', 'Time in inc sample', 'Num pokes corr match', 
+               'Time in corr match']
+
+    df = pd.DataFrame(data_dict)
+    available_columns = [col for col in include[3:] if col in df.columns]
+
+    df.loc[df['Stage'] > 0, 'HH Time'] = pd.NA
+
+    daily_avg = df.groupby(['Date', 'RatID', 'Stage'])[available_columns].mean().reset_index()
+    daily_avg.columns = ['Date', 'RatID', 'Stage'] + [f'{col}_avg' for col in available_columns]
+
+    return daily_avg
+
+
+# Function to add summary data
+def add_summary(data_dict):
+    summary_df = averages(data_dict)
+    summary_dict = {'daily_summary': summary_df.to_dict(orient='records')}
+    return summary_dict
+
+
+# Upload function to MongoDB
+def upload(folder_location):
+    for file_name in os.listdir(folder_location):
+        if file_name.startswith("metrics"):
+            file_path = os.path.join(folder_location, file_name)
+            data_dict = make_dict(file_path)
+            summary = add_summary(data_dict)
+
+            if data_dict:
+                collection.insert_many(data_dict)
+            if summary:
+                summary_collection.insert_one(summary)
+
+            print(f"Uploaded {file_name}")
+
+
+# Function to upload a single new file
+def upload_new_file(file_name):
+    if file_name.startswith("metrics"):
+        file_path = os.path.join(folder_location, file_name)
+        data_dict = make_dict(file_path)
+        summary = add_summary(data_dict)
+
+        if data_dict:
+            collection.insert_many(data_dict)
+        if summary:
+            summary_collection.insert_one(summary)
+
+        print(f"Uploaded the single file: {file_name}")
+
+
+# Watchdog to monitor folder for new files
+def watch_and_upload():
+    class FileWatcher(FileSystemEventHandler):
+        def on_created(self, event):
+            if event.is_directory or not event.src_path.lower().endswith((".csv", ".xls", ".xlsx")):
+                return
+            print(f"New file detected: {event.src_path}")
+            upload_new_file(os.path.basename(event.src_path))
+
+    observer = Observer()
+    observer.schedule(FileWatcher(), path=folder_location, recursive=False)
+    observer.start()
+    print(f"Watching folder: {folder_location}")
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+        print("Stopping file watcher...")
+    observer.join()
+
+
+# Run initial upload
+upload(folder_location)
+
+# Start watching for new files
+watch_and_upload()
