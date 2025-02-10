@@ -6,7 +6,7 @@ import plotly.express as px
 import pandas as pd
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://_____@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://joy_williamslab:9876@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Daily summaries"
 
@@ -21,8 +21,8 @@ df["Date"] = pd.to_datetime(df["Date"])
 
 # Get unique RatIDs
 rat_ids = df["RatID"].unique()
-rat_id_options = [{"label": "All RatIDs", "value": "all"}] + [{"label": f"Rat {rat}", "value": rat} for rat in rat_ids]
-
+rat_id_options = [{"label": "All RatIDs", "value": "all"}] + [{"label": f"Rat {rat}", "value": str(rat)} for rat in rat_ids]
+print("Dropdown options:", rat_id_options)
 # Get unique Stages
 stages = sorted(df["Stage"].unique())
 stage_options = [{"label": f"Stage {stage}", "value": stage} for stage in stages]
@@ -123,25 +123,37 @@ app.layout = html.Div([
 @app.callback(
     Output("line-graph", "figure"),
     Output("hover-widget", "children"),  
-    [Input("metric-dropdown", "value"),
-     Input("ratid-dropdown", "value"),
+    [Input("ratid-dropdown", "value"),
      Input("stage-dropdown", "value"),
+     Input("metric-dropdown", "value"),
      Input("time-range", "value")]
 )
 def update_graph(selected_metric, selected_ratid, selected_stage, selected_rows):
-    filtered_df = df[df["Stage"] == selected_stage]
-
+    filtered_df = df
+    print("Initial df:", filtered_df)
+    print(f"Raw selected_ratid value: {selected_ratid} (type: {type(selected_ratid)})")
     # Filter by RatID
     if selected_ratid != "all":
-        filtered_df = filtered_df[filtered_df["RatID"] == selected_ratid]
-
+        filtered_df = filtered_df[filtered_df["RatID"] == int(selected_ratid)]
+        print("filtered by rat id", filtered_df)
+        if filtered_df.empty:
+            return {}, "No data available for the selected filters. Please try different filters."
+    if selected_stage is not None:
+        filtered_df = filtered_df[filtered_df["Stage"] == selected_stage]
+        print("filtered by stage", filtered_df)
+    
     # Ensure each RatID has exactly selected_rows points
     filtered_df = (
         filtered_df.sort_values(by="Date")
         .groupby("RatID")
         .tail(selected_rows)
     )
-
+    #not displaying na values in graph
+    filtered_df = filtered_df.dropna(subset=[selected_metric])
+    print("after dropping NAs", filtered_df)
+    if filtered_df.empty:
+        return {}, "No data available for the selected filters. Please try different filters."
+    
     # Assign **sequential Trial numbers** (1-N) per RatID
     filtered_df["Trial"] = filtered_df.groupby("RatID").cumcount() + 1
 

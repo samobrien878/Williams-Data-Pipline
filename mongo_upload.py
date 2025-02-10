@@ -146,6 +146,7 @@ def add_summary(data_dict):
     summary_df = averages(data_dict)
     summary_dict = {"daily_summary": summary_df.to_dict(orient="records")}
     return summary_dict
+#something wrong, only adding rats 18, 1, and 2 as daily_summaries
 
 
 # Upload files to MongoDB
