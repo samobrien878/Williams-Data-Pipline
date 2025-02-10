@@ -8,7 +8,7 @@ import time
 import chardet  # Added for encoding detection
 from collections import Counter
 
-MONGO_URI = "mongodb+srv://obriensam878:1234@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://____:_____@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summarys"
