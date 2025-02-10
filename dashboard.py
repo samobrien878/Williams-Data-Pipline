@@ -8,7 +8,7 @@ import pandas as pd
 # Connect to MongoDB
 MONGO_URI = "mongodb+srv://____:____@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
-COLLECTION_NAME = "Daily summarys"
+COLLECTION_NAME = "Daily summaries"
 
 client = MongoClient(MONGO_URI)
 db = client[DB_NAME]

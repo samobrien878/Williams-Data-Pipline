@@ -11,7 +11,7 @@ from collections import Counter
 MONGO_URI = "mongodb+srv://:@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
-SUMMARY_COLLECTION_NAME = "Daily summarys"
+SUMMARY_COLLECTION_NAME = "Daily summaries"
 folder_location = r"C:\Senior Thesis\DBs"
 
 # Connect to MongoDB
