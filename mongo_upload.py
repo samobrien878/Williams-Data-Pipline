@@ -14,7 +14,7 @@ COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
 folder_location = r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs"
 
-# Connect to MongoDB
+
 try:
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]
@@ -49,7 +49,6 @@ def detect_encoding(file_path, num_bytes=10000):
     return result["encoding"]
 
 
-# Load data dynamically (CSV or Excel)
 def load_data(file_path):
     file_ext = os.path.splitext(file_path)[1].lower()
 
@@ -71,7 +70,6 @@ def load_data(file_path):
     return df
 
 
-# Convert DataFrame to dictionary format for MongoDB
 def make_dict(file_path):
     df = load_data(file_path)
     if df is None:
