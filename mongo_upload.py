@@ -8,13 +8,13 @@ import chardet  # Added for encoding detection
 from collections import Counter
 import pandas as pd
 
-MONGO_URI = "mongodb+srv://@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://obriensam878:1234@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
 folder_location = r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs"
 
-
+# Connect to MongoDB
 try:
     client = MongoClient(MONGO_URI)
     db = client[DB_NAME]
@@ -49,6 +49,7 @@ def detect_encoding(file_path, num_bytes=10000):
     return result["encoding"]
 
 
+# Load data dynamically (CSV or Excel)
 def load_data(file_path):
     file_ext = os.path.splitext(file_path)[1].lower()
 
@@ -70,18 +71,26 @@ def load_data(file_path):
     return df
 
 
+# Convert DataFrame to dictionary format for MongoDB
 def make_dict(file_path):
     df = load_data(file_path)
     if df is None:
         return []
 
     metadata = parse_filename(os.path.basename(file_path))
+    file_date = datetime(metadata[5], metadata[3], metadata[4])
+    cutoff_date = datetime(2024, 8, 1)
+    # Only process files later than the cutoff date
+    if file_date < cutoff_date:
+        print(f"Skipping file {file_path} as its date {file_date.date()} is before cutoff {cutoff_date.date()}.")
+        return []
+
     df["RatID"] = metadata[0]
     df["Session"] = metadata[1]
     df["Stage"] = metadata[2]
-    df["Date"] = datetime(metadata[5], metadata[3], metadata[4])
+    df["Date"] = file_date
 
-    df = df[df["Date"] >= datetime(2023, 1, 8)]
+    df = df[df["Date"] >= datetime(2024, 8, 1)]
     data_dict = df.to_dict(orient="records")
 
     for record in data_dict:
@@ -118,12 +127,17 @@ def make_dict(file_path):
 
 
 def add_summary(data_dict):
+    # Added check to exit early if data_dict is empty or missing expected columns
+    if not data_dict:
+        return {}
+    df = pd.DataFrame(data_dict)
+    if df.empty or "Stage" not in df.columns:
+        return {}
+    
     include = ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP", "Latency to corr sample",
                "Latency to corr match", "Num pokes corr sample", "Time in corr sample", 
                "Num pokes inc sample", "Time in inc sample", "Num pokes corr match", 
                "Time in corr match"]
-
-    df = pd.DataFrame(data_dict)
 
     available_columns = [col for col in include if col in df.columns]
 
@@ -196,7 +210,7 @@ def watch_and_upload():
             time.sleep(1)
     except KeyboardInterrupt:
         observer.stop()
-        print("Stopping file watcher...")
+        print("Stopping file watcher...") 
     observer.join()
 
 
