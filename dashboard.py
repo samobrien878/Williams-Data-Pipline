@@ -10,7 +10,7 @@ import dash_bootstrap_components as dbc
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://obriensam878:1234@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Daily summaries"
 
