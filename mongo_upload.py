@@ -1,4 +1,3 @@
-import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime
 import os
@@ -7,12 +6,13 @@ from watchdog.events import FileSystemEventHandler
 import time
 import chardet  # Added for encoding detection
 from collections import Counter
+import pandas as pd
 
-MONGO_URI = "mongodb+srv://____@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
-folder_location = r"C:\Users\joyki\Documents\Documents\Williams_Lab\Williams-Data-Pipline\Test_data"
+folder_location = r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs"
 
 # Connect to MongoDB
 try:
@@ -119,34 +119,33 @@ def make_dict(file_path):
     return data_dict
 
 
-# Compute daily averages
-def averages(data_dict):
-    def most_common(lst):
-        cleaned_lst = [item for item in lst if item and item != ""]
-        return Counter(cleaned_lst).most_common(1)[0][0] if cleaned_lst else None
-
-    include = ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP", "HH Time", "Latency to corr sample",
+def add_summary(data_dict):
+    include = ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP", "Latency to corr sample",
                "Latency to corr match", "Num pokes corr sample", "Time in corr sample", 
                "Num pokes inc sample", "Time in inc sample", "Num pokes corr match", 
                "Time in corr match"]
 
     df = pd.DataFrame(data_dict)
-    available_columns = [col for col in include[7:] if col in df.columns]
-    
-    df.loc[df["Stage"] > 0, "HH Time"] = pd.NA
 
-    daily_avg = df.groupby(["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP"])[available_columns].mean().reset_index()
-    daily_avg.columns = ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP"] + [f"{col}_avg" for col in available_columns]
+    available_columns = [col for col in include if col in df.columns]
 
-    return daily_avg
+    df.loc[df["Stage"] > 0, "HH Time"] = pd.NA  # Nullify HH Time for stages > 0
 
+    # summing false and true positives, everything else avg
+    agg_dict = {col: "mean" for col in available_columns if col not in ["Date", "RatID", "Stage", "TP", "FP"]}
+    agg_dict.update({"TP": "sum", "FP": "sum", "S_FP": "sum", "M_FP": "sum"})  # Summing these values
 
-# Add summary data
-def add_summary(data_dict):
-    summary_df = averages(data_dict)
-    summary_dict = {"daily_summary": summary_df.to_dict(orient="records")}
-    return summary_dict
-#something wrong, only adding rats 18, 1, and 2 as daily_summaries
+    # groups by date, ratid, and stage so that there is only 1 entry per summary in the db
+    daily_avg = df.groupby(["Date", "RatID", "Stage"], as_index=False).agg(agg_dict)
+
+    # renaming for some clarity
+    renamed_columns = {col: f"{col}_avg" for col in available_columns if col not in ["Date", "RatID", "Stage", "TP", "FP", "S_FP", "M_FP"]}
+    renamed_columns.update({"TP": "TP_total", "FP": "FP_total", "S_FP": "S_FP_total", "M_FP": "M_FP_total"})  # Rename summed values
+    daily_avg.rename(columns=renamed_columns, inplace=True)
+
+    # dict so that it can go to mongo
+    return {"daily_summary": daily_avg.to_dict(orient="records")}
+
 
 
 # Upload files to MongoDB
