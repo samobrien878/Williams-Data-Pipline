@@ -8,7 +8,7 @@ import chardet  # Added for encoding detection
 from collections import Counter
 import pandas as pd
 
-MONGO_URI = "mongodb+srv://obriensam878:1234@serverlessinstance0.gqqyx4s.mongodb.net/"
+MONGO_URI = "mongodb+srv://@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
