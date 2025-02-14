@@ -7,9 +7,8 @@ import time
 import chardet  # Added for encoding detection
 from collections import Counter
 import pandas as pd
-from config import MONGO_PWORD
+from config import MONGO_URI
 
-MONGO_URI = "mongodb+srv://obriensam:{MONGO_PWORD}@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
