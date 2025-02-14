@@ -5,12 +5,12 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
+from config import MONGO_URI
 
 # Use Bootstrap for beautiful styling
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Daily summaries"
 

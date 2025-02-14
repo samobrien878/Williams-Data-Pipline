@@ -7,12 +7,11 @@ import time
 import chardet  # Added for encoding detection
 from collections import Counter
 import pandas as pd
+from config import MONGO_URI, folder_location
 
-MONGO_URI = "mongodb+srv://@serverlessinstance0.gqqyx4s.mongodb.net/"
 DB_NAME = "training_data"
 COLLECTION_NAME = "Raw_Data"
 SUMMARY_COLLECTION_NAME = "Daily summaries"
-folder_location = r"C:\Users\obrie\OneDrive\Desktop\Documents\Local_Python\Williams Data Science Project\DBs"
 
 # Connect to MongoDB
 try:
