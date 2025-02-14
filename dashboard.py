@@ -7,10 +7,12 @@ import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from config import MONGO_URI
 
-# Use Bootstrap for beautiful styling
-external_stylesheets = [dbc.themes.BOOTSTRAP]
+# Use the Cerulean theme for a colorful, professional look
+external_stylesheets = [dbc.themes.CERULEAN]
 
-# Connect to MongoDB and query the Daily summaries collection
+# -----------------------------
+# MongoDB Connection and Data
+# -----------------------------
 DB_NAME = "training_data"
 SUMMARY_COLLECTION = "Daily summaries"
 
@@ -59,195 +61,209 @@ phase_1_metrics = {
 
 # For the Recap page, use the full summary_df (which includes stage 0)
 progress_df = summary_df.copy()
-
-# Get unique RatIDs and Stages for the Recap page
 progress_rat_ids = progress_df["RatID"].unique()
 progress_rat_id_options = [{"label": f"Rat {rat}", "value": rat} for rat in progress_rat_ids]
 progress_stages = sorted(progress_df["Stage"].unique())
 progress_stage_options = [{"label": f"Stage {stage}", "value": stage} for stage in progress_stages]
 
-# --- Navigation Bar (includes link to the Recap page) ---
-navbar = html.Div(
-    [
-        html.Div(
-            [
-                html.A("Overview", href="/", style={"color": "white", "textDecoration": "none", "fontSize": "20px"}),
-                html.A("Averages", href="/averages", style={"color": "white", "textDecoration": "none", "fontSize": "20px", "marginLeft": "20px"}),
-                html.A("Recap", href="/progress", style={"color": "white", "textDecoration": "none", "fontSize": "20px", "marginLeft": "20px"}),
-            ],
-            style={
-                "display": "flex",
-                "justifyContent": "center",
-                "alignItems": "center",
-                "backgroundColor": "#007BFF",
-                "padding": "10px",
-                "position": "sticky",
-                "top": "0",
-                "zIndex": "1000",
-                "boxShadow": "0 4px 8px rgba(0, 0, 0, 0.1)",
-            },
-        )
-    ]
+# -----------------------------
+# Styling (Colorful & Professional Theme)
+# -----------------------------
+navbar_style = {
+    "backgroundColor": "#007bff",  # professional blue
+    "padding": "10px",
+    "position": "sticky",
+    "top": "0",
+    "zIndex": "1000",
+    "display": "flex",
+    "justifyContent": "center",
+    "alignItems": "center",
+    "borderBottom": "2px solid #0056b3"
+}
+
+page_container_style = {
+    "backgroundColor": "#f7f7f7",  # light background for readability
+    "padding": "20px",
+    "color": "#333",
+    "minHeight": "100vh",
+    "fontFamily": "Arial, sans-serif"
+}
+
+card_style = {
+    "width": "300px",
+    "margin": "10px",
+    "backgroundColor": "white",
+    "border": "1px solid #007bff",
+    "borderRadius": "5px",
+    "boxShadow": "0 2px 4px rgba(0, 0, 0, 0.1)"
+}
+
+card_header_style = {
+    "backgroundColor": "#007bff",
+    "color": "white",
+    "padding": "10px",
+    "fontWeight": "bold",
+    "borderTopLeftRadius": "5px",
+    "borderTopRightRadius": "5px"
+}
+
+# -----------------------------
+# Navigation Bar
+# -----------------------------
+navbar_component = html.Div(
+    html.Div([
+        html.A("Overview", href="/", style={"color": "white", "textDecoration": "none", "fontSize": "20px", "marginRight": "20px"}),
+        html.A("Averages", href="/averages", style={"color": "white", "textDecoration": "none", "fontSize": "20px", "marginRight": "20px"}),
+        html.A("Recap", href="/progress", style={"color": "white", "textDecoration": "none", "fontSize": "20px"})
+    ], style=navbar_style)
 )
 
-# --- Page 1 Layout: Rat Behavior Analysis ---
+# -----------------------------
+# Page Layouts
+# -----------------------------
+
+# Page 1: Rat Behavior Analysis
 page_1_layout = html.Div([
-    navbar,
+    navbar_component,
     html.H1("Rat Behavior Analysis Dashboard", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px"}),
-
-    # Data Table
-    html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px"}),
-    dash_table.DataTable(
-        id="data-table",
-        columns=[{"name": col, "id": col} for col in df.columns],
-        data=df.to_dict("records"),
-        page_size=10,
-        style_table={"overflowX": "auto"},
-        style_header={"fontWeight": "bold", "backgroundColor": "#e6e6e6"},
-        style_cell={"textAlign": "center", "padding": "10px"}
-    ),
-
-    # Dropdown Filters
+    html.Div([
+        html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px"}),
+        dash_table.DataTable(
+            id="data-table",
+            columns=[{"name": col, "id": col} for col in df.columns],
+            data=df.to_dict("records"),
+            page_size=10,
+            style_table={"overflowX": "auto"},
+            style_header={"fontWeight": "bold", "backgroundColor": "#007bff", "color": "white"},
+            style_cell={"textAlign": "center", "padding": "10px", "backgroundColor": "white", "color": "#333"}
+        )
+    ]),
     html.Div([
         html.Div([
-            html.H3("Select RatID"),
+            html.H3("Select RatID", style={"color": "#333"}),
             dcc.Dropdown(
                 id="ratid-dropdown",
                 options=[{"label": "All Rat IDs", "value": "all"}] + rat_id_options,
                 value=["all"],
                 multi=True,
-                clearable=False
+                clearable=False,
+                style={"backgroundColor": "white", "color": "#333"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
-
         html.Div([
-            html.H3("Select Stage"),
+            html.H3("Select Stage", style={"color": "#333"}),
             dcc.Dropdown(
                 id="stage-dropdown",
                 options=stage_options,
                 value=stages[0],
-                clearable=False
+                clearable=False,
+                style={"backgroundColor": "white", "color": "#333"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
-
         html.Div([
-            html.H3("Select Metric"),
+            html.H3("Select Metric", style={"color": "#333"}),
             dcc.Dropdown(
                 id="metric-dropdown",
                 options=[{"label": label, "value": metric} for metric, label in all_metrics.items()],
                 value="FP_total",
-                clearable=False
+                clearable=False,
+                style={"backgroundColor": "white", "color": "#333"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"})
     ], style={"display": "flex", "justifyContent": "space-between"}),
-
-    # Time Range Selection
-    html.H3("Select Time Range"),
-    dcc.RadioItems(
-        id="time-range",
-        options=[
-            {"label": "Last 7 Days per Rat", "value": 7},
-            {"label": "Last 14 Days per Rat", "value": 14},
-            {"label": "Last 30 Days per Rat", "value": 30}
-        ],
-        value=7,
-        inline=True,
-        style={"fontSize": "18px", "marginBottom": "20px"},
-        labelStyle={"margin-right": "20px"}
-    ),
-
-    # Line Graph
-    dcc.Graph(id="line-graph"),
-])
-
-# --- Page 2 Layout: Averages per Stage ---
-page_2_layout = html.Div([
-    navbar,
-    html.H1("Calculate Average Performances", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px"}),
-
-    # Dropdown for Stage Selection
     html.Div([
-        html.H3("Select Stage"),
+        html.H3("Select Time Range", style={"color": "#333"}),
+        dcc.RadioItems(
+            id="time-range",
+            options=[
+                {"label": "Last 7 Days per Rat", "value": 7},
+                {"label": "Last 14 Days per Rat", "value": 14},
+                {"label": "Last 30 Days per Rat", "value": 30}
+            ],
+            value=7,
+            inline=True,
+            style={"fontSize": "18px", "marginBottom": "20px", "color": "#333"},
+            labelStyle={"margin-right": "20px", "color": "#333"}
+        )
+    ]),
+    dcc.Graph(id="line-graph")
+], style=page_container_style)
+
+# Page 2: Averages per Stage
+page_2_layout = html.Div([
+    navbar_component,
+    html.H1("Calculate Average Performances", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px", "color": "#333"}),
+    html.Div([
+        html.H3("Select Stage", style={"color": "#333"}),
         dcc.Dropdown(
             id="averages-stage-dropdown",
             options=stage_options,
             value=stages[0],
             clearable=False,
-            style={"width": "50%", "margin": "auto"}
+            style={"width": "50%", "margin": "auto", "backgroundColor": "white", "color": "#333"}
         ),
     ], style={"textAlign": "center", "marginBottom": "20px"}),
-
-    # Dropdown for Metric Selection
     html.Div([
-        html.H3("Select Metric"),
+        html.H3("Select Metric", style={"color": "#333"}),
         dcc.Dropdown(
             id="averages-metric-dropdown",
             options=[{"label": label, "value": metric} for metric, label in all_metrics.items()],
             value="FP_total",
             clearable=False,
-            style={"width": "50%", "margin": "auto"}
+            style={"width": "50%", "margin": "auto", "backgroundColor": "white", "color": "#333"}
         ),
     ], style={"textAlign": "center", "marginBottom": "20px"}),
-
-    # Multi-select Dropdown for Rat IDs
     html.Div([
-        html.H3("Select Rat IDs"),
+        html.H3("Select Rat IDs", style={"color": "#333"}),
         dcc.Dropdown(
             id="averages-ratid-dropdown",
             options=[{"label": "All Rat IDs", "value": "all"}] + rat_id_options,
             value=["all"],
             multi=True,
             clearable=False,
-            style={"width": "50%", "margin": "auto"}
+            style={"width": "50%", "margin": "auto", "backgroundColor": "white", "color": "#333"}
         ),
     ], style={"textAlign": "center", "marginBottom": "20px"}),
+    html.Div(id="averages-display", style={"display": "flex", "flexWrap": "wrap", "justifyContent": "center"})
+], style=page_container_style)
 
-    # Display area for the aggregated averages (widget)
-    html.Div(id="averages-display", style={"display": "flex", "flexWrap": "wrap", "justifyContent": "center"}),
-])
-
-# --- Page 3 Layout: Recap (Progress Profiles) ---
+# Page 3: Recap (Progress Profiles)
 page_3_layout = html.Div([
-    navbar,
-    html.H1("Rat Progress Profiles", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px"}),
-
-    # Dropdown for Stage Selection (from summary data, includes stage 0)
+    navbar_component,
+    html.H1("Rat Progress Profiles", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px", "color": "#333"}),
     html.Div([
-        html.H3("Select Stage"),
+        html.H3("Select Stage", style={"color": "#333"}),
         dcc.Dropdown(
             id="progress-stage-dropdown",
             options=progress_stage_options,
             value=progress_stage_options[0]["value"],
             clearable=False,
-            style={"width": "50%", "margin": "auto"}
+            style={"width": "50%", "margin": "auto", "backgroundColor": "white", "color": "#333"}
         ),
     ], style={"textAlign": "center", "marginBottom": "20px"}),
-
-    # Dropdown for RatID Selection
     html.Div([
-        html.H3("Select Rat IDs"),
+        html.H3("Select Rat IDs", style={"color": "#333"}),
         dcc.Dropdown(
             id="progress-ratid-dropdown",
             options=[{"label": "All Rat IDs", "value": "all"}] + progress_rat_id_options,
             value=["all"],
             multi=True,
             clearable=False,
-            style={"width": "50%", "margin": "auto"}
+            style={"width": "50%", "margin": "auto", "backgroundColor": "white", "color": "#333"}
         ),
     ], style={"textAlign": "center", "marginBottom": "20px"}),
-
-    # Display area for the progress profiles
     html.Div(id="progress-display", style={"display": "flex", "flexWrap": "wrap", "justifyContent": "center"})
-])
+], style=page_container_style)
 
-# --- App Layout with Multi-Page Support ---
+# -----------------------------
+# App Layout and Page Routing
+# -----------------------------
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
     html.Div(id="page-content")
-])
+], style={"backgroundColor": "#f7f7f7"})
 
-# --- Callback to Switch Between Pages ---
 @app.callback(
     Output("page-content", "children"),
     Input("url", "pathname")
@@ -260,7 +276,9 @@ def display_page(pathname):
     else:
         return page_1_layout
 
-# --- Callback to Update Metric Dropdown Based on Stage Selection (Page 1) ---
+# -----------------------------
+# Callbacks for Page 1
+# -----------------------------
 @app.callback(
     Output("metric-dropdown", "options"),
     Output("metric-dropdown", "value"),
@@ -275,7 +293,6 @@ def update_metric_options(selected_stage):
         default_value = "FP_total"
     return metric_options, default_value
 
-# --- Callback to Update the Line Graph (Page 1) ---
 @app.callback(
     Output("line-graph", "figure"),
     Input("ratid-dropdown", "value"),
@@ -303,11 +320,16 @@ def update_line_graph(selected_rats, selected_stage, selected_metric, time_range
     fig.update_layout(
         xaxis_title="Date",
         yaxis_title=selected_metric,
-        legend_title="RatID"
+        legend_title="RatID",
+        plot_bgcolor="#f7f7f7",
+        paper_bgcolor="#f7f7f7",
+        font=dict(color="#333")
     )
     return fig
 
-# --- Callback to Update the Averages Display (Page 2) ---
+# -----------------------------
+# Callback for Page 2
+# -----------------------------
 @app.callback(
     Output("averages-display", "children"),
     Input("averages-stage-dropdown", "value"),
@@ -333,6 +355,11 @@ def update_averages_display(selected_stage, selected_metric, selected_rat_ids):
             title={'text': f"Rat {selected_rat_ids[0]} Average {all_metrics[selected_metric]}"},
             gauge={'axis': {'range': [0, max_value * 1.1]}}
         ))
+        gauge_fig.update_layout(
+            plot_bgcolor="#f7f7f7",
+            paper_bgcolor="#f7f7f7",
+            font=dict(color="#333")
+        )
         return dcc.Graph(figure=gauge_fig, style={"width": "50%", "margin": "auto"})
     else:
         if not filtered_df.empty:
@@ -347,62 +374,65 @@ def update_averages_display(selected_stage, selected_metric, selected_rat_ids):
             title={'text': f"Aggregated Average {all_metrics[selected_metric]}"},
             gauge={'axis': {'range': [0, max_value * 1.1]}}
         ))
+        gauge_fig.update_layout(
+            plot_bgcolor="#f7f7f7",
+            paper_bgcolor="#f7f7f7",
+            font=dict(color="#333")
+        )
         return dcc.Graph(figure=gauge_fig, style={"width": "50%", "margin": "auto"})
 
-# --- Callback to Update the Recap (Progress Profiles) (Page 3) ---
+# -----------------------------
+# Callback for Page 3 (Recap)
+# -----------------------------
 @app.callback(
     Output("progress-display", "children"),
     Input("progress-stage-dropdown", "value"),
     Input("progress-ratid-dropdown", "value")
 )
 def update_progress_display(selected_stage, selected_rat_ids):
-    # Filter progress_df (summary data) based on the selected stage
     filtered = progress_df[progress_df["Stage"] == selected_stage]
     if "all" not in selected_rat_ids:
         filtered = filtered[filtered["RatID"].isin(selected_rat_ids)]
     
     profile_cards = []
-    # Group the summary data by RatID
     for rat, group in filtered.groupby("RatID"):
-        # Sort by Date so that the most recent day's record is last
         group = group.sort_values("Date")
-        days_in_stage = group["Date"].nunique()  # Count distinct days
+        days_in_stage = group["Date"].nunique()
+        most_recent = group.iloc[-1]
+        trials_completed = most_recent.get("trials_completed", 0)
+        successful_trials = trials_completed  # For stages 1,2,3, use the most recent day's trials_completed
         
-        if selected_stage == 0:
-            # For Stage 0, use the most recent day's summary
-            most_recent = group.iloc[-1]
-            trials_completed = most_recent.get("trials_completed", 0) if "trials_completed" in most_recent else 0
-            # Count trials on the most recent day where Max_HH is at least 4
-            trials_at_4 = trials_completed if most_recent.get("Max_HH", 0) >= 4 else 0
-            
-            profile_text = [
-                html.P(f"Days in Stage 0: {days_in_stage}"),
-                html.P(f"Most Recent Day Trials Completed: {trials_completed}"),
-                html.P(f"Trials with HeadHold ≥ 4: {trials_at_4}")
-            ]
-        else:
-            # For stages 1, 2, 3: count days and sum successful trials 
-            # (we define successful trials as days where FP_total is 0 and count TP_total)
-            successful_trials = group[group["FP_total"] == 0]["TP_total"].sum()
-            profile_text = [
-                html.P(f"Days in Stage {selected_stage}: {days_in_stage}"),
-                html.P(f"Successful Trials (TP_total when FP_total=0): {successful_trials}")
-            ]
+        profile_text = html.Div([
+            html.P(f"Has spent {days_in_stage} days in Stage {selected_stage}.", style={"fontSize": "16px", "margin": "5px 0", "color": "#333"}),
+            html.P(f"Last session completed {successful_trials} successful trials.", style={"fontSize": "16px", "margin": "5px 0", "color": "#333"})
+        ])
+        
+        # Create a square icon with a green color
+        icon = html.Div(style={
+            "width": "48px",
+            "height": "48px",
+            "backgroundColor": "green",
+            "display": "inline-block",
+            "marginRight": "10px",
+            "borderRadius": "5px"
+        })
         
         card = dbc.Card(
             [
-                dbc.CardHeader(html.H4(f"Rat {rat}")),
+                dbc.CardHeader(html.H4([icon, f"Rat {rat}"], style=card_header_style)),
                 dbc.CardBody(profile_text)
             ],
-            style={"width": "300px", "margin": "10px", "boxShadow": "0 4px 8px rgba(0, 0, 0, 0.1)"}
+            style=card_style
         )
         profile_cards.append(card)
     
     if not profile_cards:
-        return html.Div("No data found for the selected criteria.", style={"textAlign": "center", "marginTop": "20px"})
+        return html.Div("No data found for the selected criteria.", style={"textAlign": "center", "marginTop": "20px", "fontSize": "18px", "color": "#333"})
     
     return html.Div(profile_cards, style={"display": "flex", "flexWrap": "wrap", "justifyContent": "center"})
 
-# --- Run the App ---
+# -----------------------------
+# Run the App
+# -----------------------------
 if __name__ == "__main__":
     app.run_server(debug=True)
