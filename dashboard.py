@@ -7,6 +7,12 @@ import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from config import MONGO_URI
 
+#prism color palette for line graphs
+prism = ["rgb(95, 70, 144)", "rgb(29, 105, 150)", "rgb(56, 166, 165)",
+         "rgb(15, 133, 84)", "rgb(115, 175, 72)", "rgb(237, 173, 8)", 
+         "rgb(225, 124, 5)", "rgb(204, 80, 62)", "rgb(148, 52, 110)",
+         "rgb(11, 64, 112)", "rgb(102, 102, 102)"]
+
 # Use the Cerulean theme for a colorful, professional look
 external_stylesheets = [dbc.themes.CERULEAN]
 
@@ -315,15 +321,20 @@ def update_line_graph(selected_rats, selected_stage, selected_metric, time_range
         y=selected_metric,
         color="RatID",
         markers=True,
-        title=f"{selected_metric} Over Time (Last {time_range} Days per Rat)"
+        title=f"{selected_metric} Over Time (Last {time_range} Days per Rat)",
+        color_discrete_sequence=prism
     )
     fig.update_layout(
         xaxis_title="Date",
         yaxis_title=selected_metric,
         legend_title="RatID",
-        plot_bgcolor="#f7f7f7",
-        paper_bgcolor="#f7f7f7",
-        font=dict(color="#333")
+        paper_bgcolor = "#FFFFFF",
+        plot_bgcolor = "#FFFFFF",
+        font=dict(color="#333"),
+        title=dict(font=dict(color="#333")),
+        xaxis=dict(showgrid=False, zeroline=False, color="#333"),
+        yaxis=dict(showgrid=False, zeroline=False, color="#333"),
+        colorway= prism
     )
     return fig
 
@@ -356,9 +367,13 @@ def update_averages_display(selected_stage, selected_metric, selected_rat_ids):
             gauge={'axis': {'range': [0, max_value * 1.1]}}
         ))
         gauge_fig.update_layout(
-            plot_bgcolor="#f7f7f7",
-            paper_bgcolor="#f7f7f7",
-            font=dict(color="#333")
+            paper_bgcolor = "#FFFFFF",
+            plot_bgcolor = "#FFFFFF",
+            font=dict(color="#333"),
+            title=dict(font=dict(color="#333")),
+            xaxis=dict(showgrid=False, zeroline=False, color="#333"),
+            yaxis=dict(showgrid=False, zeroline=False, color="#333"),
+            colorway= prism
         )
         return dcc.Graph(figure=gauge_fig, style={"width": "50%", "margin": "auto"})
     else:
@@ -375,9 +390,13 @@ def update_averages_display(selected_stage, selected_metric, selected_rat_ids):
             gauge={'axis': {'range': [0, max_value * 1.1]}}
         ))
         gauge_fig.update_layout(
-            plot_bgcolor="#f7f7f7",
-            paper_bgcolor="#f7f7f7",
-            font=dict(color="#333")
+            paper_bgcolor = "#FFFFFF",
+            plot_bgcolor = "#FFFFFF",
+            font=dict(color="#333"),
+            title=dict(font=dict(color="#333")),
+            xaxis=dict(showgrid=False, zeroline=False, color="#333"),
+            yaxis=dict(showgrid=False, zeroline=False, color="#333"),
+            colorway= prism
         )
         return dcc.Graph(figure=gauge_fig, style={"width": "50%", "margin": "auto"})
 
