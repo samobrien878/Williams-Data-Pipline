@@ -87,8 +87,16 @@ navbar_style = {
     "borderBottom": "2px solid #0056b3"
 }
 
+graph_page_style = {
+    "backgroundColor": "#D3D3FF",  #matches graph scheme
+    "padding": "20px",
+    "color": "#333",
+    "minHeight": "100vh",
+    "fontFamily": "Arial, sans-serif"
+
+}
 page_container_style = {
-    "backgroundColor": "#f7f7f7",  # light background for readability
+    "backgroundColor": "#FFFFFF",  # light background for readability
     "padding": "20px",
     "color": "#333",
     "minHeight": "100vh",
@@ -140,8 +148,21 @@ page_1_layout = html.Div([
             data=df.to_dict("records"),
             page_size=10,
             style_table={"overflowX": "auto"},
-            style_header={"fontWeight": "bold", "backgroundColor": "#007bff", "color": "white"},
-            style_cell={"textAlign": "center", "padding": "10px", "backgroundColor": "white", "color": "#333"}
+            style_header={"fontWeight": "bold", "backgroundColor": "rgb(29, 105, 150)", "color": "white"},
+            style_cell={"textAlign": "center", "padding": "10px", "backgroundColor": "white", "color": "#333", "border": "1px solid rgb(29, 105, 150)"},
+            style_data_conditional = [
+                {
+                    "if": {"state": "selected"},
+                    "backgroundColor": "rgba(29, 105, 150, 0.5)",
+                    "border" : "1px solid rgb(29, 105, 150)"
+                },
+                {
+                    "if": {"state": "active"},
+                    "backgroundColor":"rgba(29, 105, 150, 0.5)",
+                    "border" : "1px solid rgb(29, 105, 150)"
+                }
+
+            ]
         )
     ]),
     html.Div([
@@ -193,7 +214,7 @@ page_1_layout = html.Div([
         )
     ]),
     dcc.Graph(id="line-graph")
-], style=page_container_style)
+], style=graph_page_style)
 
 # Page 2: Averages per Stage
 page_2_layout = html.Div([
