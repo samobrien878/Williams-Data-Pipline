@@ -76,15 +76,16 @@ progress_stage_options = [{"label": f"Stage {stage}", "value": stage} for stage 
 # Styling (Colorful & Professional Theme)
 # -----------------------------
 navbar_style = {
-    "backgroundColor": "#007bff",  # professional blue
+    "backgroundColor": "rgb(29, 105, 150)",  
     "padding": "10px",
     "position": "sticky",
     "top": "0",
     "zIndex": "1000",
     "display": "flex",
-    "justifyContent": "center",
+    "justifyContent": "space-between",
     "alignItems": "center",
-    "borderBottom": "2px solid #0056b3"
+    "borderBottom": "2px solid #0056b3",
+    "fontFamily": "Garamond, serif"
 }
 
 graph_page_style = {
@@ -126,9 +127,9 @@ card_header_style = {
 # -----------------------------
 navbar_component = html.Div(
     html.Div([
-        html.A("Overview", href="/", style={"color": "white", "textDecoration": "none", "fontSize": "20px", "marginRight": "20px"}),
-        html.A("Averages", href="/averages", style={"color": "white", "textDecoration": "none", "fontSize": "20px", "marginRight": "20px"}),
-        html.A("Recap", href="/progress", style={"color": "white", "textDecoration": "none", "fontSize": "20px"})
+        html.A("Overview", href="/", style={"color": "white", "textDecoration": "none", "fontSize": "30px", "marginLeft" : "100px"}),
+        html.A("Averages", href="/averages", style={"color": "white", "textDecoration": "none", "fontSize": "30px"}),
+        html.A("Recap", href="/progress", style={"color": "white", "textDecoration": "none", "fontSize": "30px", "marginRight" : "100px"})
     ], style=navbar_style)
 )
 
@@ -161,7 +162,6 @@ page_1_layout = html.Div([
                     "backgroundColor":"rgba(29, 105, 150, 0.5)",
                     "border" : "1px solid rgb(29, 105, 150)"
                 }
-
             ]
         )
     ]),
