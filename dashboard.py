@@ -140,7 +140,9 @@ navbar_component = html.Div(
 # Page 1: Rat Behavior Analysis
 page_1_layout = html.Div([
     navbar_component,
-    html.H1("Rat Behavior Analysis Dashboard", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px"}),
+    html.H1("Rat Behavior Analysis Dashboard", style={"textAlign": "center", "fontFamily": "American Typewriter, serif", "fontSize": "36px", 
+                                                      "marginTop" : "20px","marginBottom": "20px", "textTransform": "uppercase", "color": "rgb(95, 70, 144)",
+                                                      "wordSpacing": "15px", "letterSpacing" : "5px"}),
     html.Div([
         html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px"}),
         dash_table.DataTable(
