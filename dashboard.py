@@ -169,14 +169,14 @@ page_1_layout = html.Div([
     ]),
     html.Div([
         html.Div([
-            html.H3("Select RatID"),
+            html.H3("Select Rat ID"),
             dcc.Dropdown(
                 id="ratid-dropdown",
                 options=[{"label": "All Rat IDs", "value": "all"}] + rat_id_options,
                 value=["all"],
                 multi=True,
                 clearable=False,
-                style={"backgroundColor": "white", "color": "#333", "fontFamily": "Garamond, serif"}
+                style={"backgroundColor": "rgba(95, 70, 144, 0.3)", "color": prism[0]}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
@@ -186,7 +186,7 @@ page_1_layout = html.Div([
                 options=stage_options,
                 value=stages[0],
                 clearable=False,
-                style={"backgroundColor": "white", "color": "#333", "fontFamily": "Garamond, serif"}
+                style={"backgroundColor": "rgba(148, 52, 110, 0.3)", "color": prism[8]}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
@@ -196,7 +196,7 @@ page_1_layout = html.Div([
                 options=[{"label": label, "value": metric} for metric, label in all_metrics.items()],
                 value="FP_total",
                 clearable=False,
-                style={"backgroundColor": "white", "color": "#333", "fontFamily": "Garamond, serif"}
+                style={"backgroundColor": "rgba(56, 166, 165, 0.3)", "color": prism[2]}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"})
     ], style={"display": "flex", "justifyContent": "space-between"}),
