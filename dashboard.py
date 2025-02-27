@@ -286,6 +286,7 @@ page_3_layout = html.Div([
 # App Layout and Page Routing
 # -----------------------------
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
+app._favicon = "favicon.png"
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
     navbar_component,  # Include the navbar component here
