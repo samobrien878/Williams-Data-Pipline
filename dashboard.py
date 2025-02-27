@@ -363,7 +363,7 @@ def update_line_graph(selected_rats, selected_stage, selected_metric, time_range
     else:
         filtered_df = df[(df["Stage"] == selected_stage) & (df["RatID"].isin(selected_rats))]
     
-    filtered_df = filtered_df.sort_values(by="Date", ascending=False)
+    filtered_df = filtered_df.sort_values(by=["RatID", "Date"], ascending=[True, False])
     filtered_df = filtered_df.groupby("RatID").head(time_range)
   #fetching label to be more readable, not exact name in table
     metric_label = all_metrics[selected_metric]
