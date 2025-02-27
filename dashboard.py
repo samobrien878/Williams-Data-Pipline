@@ -7,6 +7,7 @@ import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 from config import MONGO_URI
 
+
 #prism color palette for line graphs
 prism = ["rgb(95, 70, 144)", "rgb(29, 105, 150)", "rgb(56, 166, 165)",
          "rgb(15, 133, 84)", "rgb(115, 175, 72)", "rgb(237, 173, 8)", 
@@ -289,21 +290,34 @@ app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
     navbar_component,  # Include the navbar component here
     html.Div([
-        html.H1("Rat Behavior Analysis Dashboard", style={
-            "textAlign": "center", 
-            "fontFamily": "American Typewriter, serif", 
-            "fontSize": "36px", 
-            "marginTop": "10px",
-            "marginBottom": "20px", 
-            "textTransform": "uppercase", 
-            "color": "rgb(95, 70, 144)",
-            "wordSpacing": "15px", 
-            "letterSpacing": "5px",
+        html.Div([
+            html.Img(src="https://img.pikbest.com/origin/09/25/28/34VpIkbEsT76s.png!sw800", style={
+                "height": "100px",
+                "width" :"100px"
+            }),
+            html.H1("Rat Behavior Analysis Dashboard", style={
+                "flex" : "1",
+                "textAlign": "center", 
+                "fontFamily": "American Typewriter, serif", 
+                "fontWeight": "bold",
+                "fontSize": "36px", 
+                "marginTop": "10px",
+                "marginBottom": "20px", 
+                "textTransform": "uppercase", 
+                "color": "rgb(95, 70, 144)",
+                "wordSpacing": "15px", 
+                "letterSpacing": "5px",
+                "padding": "10px"  # Add padding for better appearance
+            }),
+        ], style={
+            "display": "flex", 
+            "alignItems": "center",
+            "justifyContent": "center",
             "backgroundColor": "rgba(29, 105, 150, 0.5)",  # Add background color
-            "padding": "10px",  # Add padding for better appearance
-            "borderRadius": "5px"  # Optional: Add border radius for rounded corners
-        }),
-    ]),
+            "padding": "10px",
+            "width": "100%",
+        }),  # Use flex container to align items
+    ], style ={"display": "flex", "justifyContent": "center"}),
     html.Div(id="page-content")
 ], style={"backgroundColor": "#f7f7f7"})
 
@@ -318,7 +332,6 @@ def display_page(pathname):
         return page_3_layout
     else:
         return page_1_layout
-
 # -----------------------------
 # Callbacks for Page 1
 # -----------------------------
