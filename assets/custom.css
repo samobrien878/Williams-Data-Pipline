@@ -2,7 +2,7 @@
     display: block;
     margin-top: 0;
     left: 0;
-transform: translateX(-50%);  /* Adjust the position to stay within the viewport */
+    transform: translateX(-50%);  /* Adjust the position to stay within the viewport */
 }
 
 #navbar-dropdown .dropdown-toggle::after {
@@ -11,11 +11,29 @@ transform: translateX(-50%);  /* Adjust the position to stay within the viewport
 
 #navbar-dropdown .dropdown-item {
     color: rgb(95, 70, 144);
-
-    .dash-table-container .dash-cell {
-    transition: background-color 0.3s ease;
 }
 
+/* Change the hover color of the navbar items */
+#navbar-dropdown .dropdown-item:hover {
+    background-color: rgba(29, 105, 150, 0.5); 
+    color: rgb(95, 70, 144);
+}
+
+/* Change the hover color of the dropdown menu items */
+.dropdown-menu .dropdown-item:hover {
+    background-color: rgba(29, 105, 150, 0.5);
+    color: rgb(95, 70, 144);
+}
+
+/* Ensure smooth transition for hover effect */
+#navbar-dropdown .dropdown-item,
+.dropdown-menu .dropdown-item {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dash-table-container .dash-cell {
+    transition: background-color 0.3s ease;
+}
 .dash-table-container .dash-cell:hover {
     background-color: rgba(29, 105, 150, 0.2);
 }

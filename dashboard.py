@@ -118,7 +118,7 @@ card_header_style = {
 # -----------------------------
 navbar_component = dbc.Navbar(
     [
-        dbc.NavbarBrand(style={"color": "white", "fontSize": "30px", "fontFamily": "Garamond, serif"}),
+        dbc.NavbarBrand(style={"color": "white", "fontSize": "30px"}, href="/"),
         dbc.DropdownMenu(
             [
                 dbc.DropdownMenuItem("Overview", href="/"),
@@ -128,7 +128,7 @@ navbar_component = dbc.Navbar(
             nav=True,
             in_navbar=True,
             label="☰",
-            style={"color": "white", "fontSize": "30px"},
+            style={"color": "white", "fontSize": "30px", "fontFamily": "TypeWriter, serif"},
             id="navbar-dropdown"
         ),
     ],
