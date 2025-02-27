@@ -144,7 +144,7 @@ navbar_component = dbc.Navbar(
 # Page 1: Rat Behavior Analysis
 page_1_layout = html.Div([
     html.Div([
-        html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px"}),
+        html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px", "fontFamily": "Garamond, serif", "color": "rgb(95, 70, 144)", "textDecoration": "underline"}),
         dash_table.DataTable(
             id="data-table",
             columns=[{"name": col, "id": col} for col in df.columns],
@@ -169,39 +169,39 @@ page_1_layout = html.Div([
     ]),
     html.Div([
         html.Div([
-            html.H3("Select RatID", style={"color": "#333"}),
+            html.H3("Select RatID", style={"color": "#333", "fontFamily": "Garamond, serif"}),
             dcc.Dropdown(
                 id="ratid-dropdown",
                 options=[{"label": "All Rat IDs", "value": "all"}] + rat_id_options,
                 value=["all"],
                 multi=True,
                 clearable=False,
-                style={"backgroundColor": "white", "color": "#333"}
+                style={"backgroundColor": "white", "color": "#333", "fontFamily": "Garamond, serif"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
-            html.H3("Select Stage", style={"color": "#333"}),
+            html.H3("Select Stage", style={"color": "#333", "fontFamily": "Garamond, serif"}),
             dcc.Dropdown(
                 id="stage-dropdown",
                 options=stage_options,
                 value=stages[0],
                 clearable=False,
-                style={"backgroundColor": "white", "color": "#333"}
+                style={"backgroundColor": "white", "color": "#333", "fontFamily": "Garamond, serif"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
-            html.H3("Select Metric", style={"color": "#333"}),
+            html.H3("Select Metric", style={"color": "#333", "fontFamily": "Garamond, serif"}),
             dcc.Dropdown(
                 id="metric-dropdown",
                 options=[{"label": label, "value": metric} for metric, label in all_metrics.items()],
                 value="FP_total",
                 clearable=False,
-                style={"backgroundColor": "white", "color": "#333"}
+                style={"backgroundColor": "white", "color": "#333", "fontFamily": "Garamond, serif"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"})
     ], style={"display": "flex", "justifyContent": "space-between"}),
     html.Div([
-        html.H3("Select Time Range", style={"color": "#333"}),
+        html.H3("Select Time Range", style={"color": "#333", "fontFamily": "Garamond, serif"}),
         dcc.RadioItems(
             id="time-range",
             options=[
@@ -211,7 +211,7 @@ page_1_layout = html.Div([
             ],
             value=7,
             inline=True,
-            style={"fontSize": "18px", "marginBottom": "20px", "color": "#333"},
+            style={"fontSize": "22px", "marginBottom": "20px", "color": "#333", "fontFamily": "Garamond, serif"},
             labelStyle={"margin-right": "20px", "color": "#333"}
         )
     ]),
