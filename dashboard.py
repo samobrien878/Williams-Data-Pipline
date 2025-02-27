@@ -384,7 +384,8 @@ def update_line_graph(selected_rats, selected_stage, selected_metric, time_range
         paper_bgcolor = "#FFFFFF",
         plot_bgcolor = "#FFFFFF",
         font=dict(color="#333"),
-        title=dict(font=dict(color="#333")),
+        title=dict(x = 0.5, xanchor = "center", font=dict(
+            family = "American Typewriter, serif", textcase= "word caps", color="#333", size= 30)),
         xaxis=dict(showgrid=False, zeroline=False, color="#333"),
         yaxis=dict(showgrid=False, zeroline=False, color="#333"),
         colorway= prism
