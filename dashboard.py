@@ -364,6 +364,8 @@ def update_line_graph(selected_rats, selected_stage, selected_metric, time_range
     
     filtered_df = filtered_df.sort_values(by="Date", ascending=False)
     filtered_df = filtered_df.groupby("RatID").head(time_range)
+  #fetching label to be more readable, not exact name in table
+    metric_label = all_metrics[selected_metric]
 
     fig = px.line(
         filtered_df,
@@ -371,12 +373,12 @@ def update_line_graph(selected_rats, selected_stage, selected_metric, time_range
         y=selected_metric,
         color="RatID",
         markers=True,
-        title=f"{selected_metric} Over Time (Last {time_range} Days per Rat)",
+        title=f"{metric_label} Over Time (Last {time_range} Days per Rat)",
         color_discrete_sequence=prism
     )
     fig.update_layout(
         xaxis_title="Date",
-        yaxis_title=selected_metric,
+        yaxis_title=metric_label,
         legend_title="RatID",
         paper_bgcolor = "#FFFFFF",
         plot_bgcolor = "#FFFFFF",
