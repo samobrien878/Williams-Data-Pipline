@@ -76,26 +76,16 @@ progress_stage_options = [{"label": f"Stage {stage}", "value": stage} for stage 
 # Styling (Colorful & Professional Theme)
 # -----------------------------
 navbar_style = {
-    "backgroundColor": "rgb(29, 105, 150)",  
+    "backgroundColor": "rgba(29, 105, 150, 0.5)",  
     "padding": "10px",
-    "position": "sticky",
+    "position": "fixed",
     "top": "0",
+    "right": "0",
     "zIndex": "1000",
-    "display": "flex",
-    "justifyContent": "space-between",
-    "alignItems": "center",
     "borderBottom": "2px solid #0056b3",
     "fontFamily": "Garamond, serif"
 }
 
-graph_page_style = {
-    "backgroundColor": "#D3D3FF",  #matches graph scheme
-    "padding": "20px",
-    "color": "#333",
-    "minHeight": "100vh",
-    "fontFamily": "Arial, sans-serif"
-
-}
 page_container_style = {
     "backgroundColor": "#FFFFFF",  # light background for readability
     "padding": "20px",
@@ -125,12 +115,25 @@ card_header_style = {
 # -----------------------------
 # Navigation Bar
 # -----------------------------
-navbar_component = html.Div(
-    html.Div([
-        html.A("Overview", href="/", style={"color": "white", "textDecoration": "none", "fontSize": "30px", "marginLeft" : "100px"}),
-        html.A("Averages", href="/averages", style={"color": "white", "textDecoration": "none", "fontSize": "30px"}),
-        html.A("Recap", href="/progress", style={"color": "white", "textDecoration": "none", "fontSize": "30px", "marginRight" : "100px"})
-    ], style=navbar_style)
+navbar_component = dbc.Navbar(
+    [
+        dbc.NavbarBrand(style={"color": "white", "fontSize": "30px", "fontFamily": "Garamond, serif"}),
+        dbc.DropdownMenu(
+            [
+                dbc.DropdownMenuItem("Overview", href="/"),
+                dbc.DropdownMenuItem("Averages", href="/averages"),
+                dbc.DropdownMenuItem("Recap", href="/progress"),
+            ],
+            nav=True,
+            in_navbar=True,
+            label="☰",
+            style={"color": "white", "fontSize": "30px"},
+            id="navbar-dropdown"
+        ),
+    ],
+    style=navbar_style,
+    dark=True,
+    color="rgba(29, 105, 150, 0.5)"
 )
 
 # -----------------------------
@@ -139,10 +142,6 @@ navbar_component = html.Div(
 
 # Page 1: Rat Behavior Analysis
 page_1_layout = html.Div([
-    navbar_component,
-    html.H1("Rat Behavior Analysis Dashboard", style={"textAlign": "center", "fontFamily": "American Typewriter, serif", "fontSize": "36px", 
-                                                      "marginTop" : "20px","marginBottom": "20px", "textTransform": "uppercase", "color": "rgb(95, 70, 144)",
-                                                      "wordSpacing": "15px", "letterSpacing" : "5px"}),
     html.Div([
         html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px"}),
         dash_table.DataTable(
@@ -216,11 +215,10 @@ page_1_layout = html.Div([
         )
     ]),
     dcc.Graph(id="line-graph")
-], style=graph_page_style)
+], style=page_container_style)
 
 # Page 2: Averages per Stage
 page_2_layout = html.Div([
-    navbar_component,
     html.H1("Calculate Average Performances", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px", "color": "#333"}),
     html.Div([
         html.H3("Select Stage", style={"color": "#333"}),
@@ -258,7 +256,6 @@ page_2_layout = html.Div([
 
 # Page 3: Recap (Progress Profiles)
 page_3_layout = html.Div([
-    navbar_component,
     html.H1("Rat Progress Profiles", style={"textAlign": "center", "fontSize": "36px", "marginBottom": "20px", "color": "#333"}),
     html.Div([
         html.H3("Select Stage", style={"color": "#333"}),
@@ -290,6 +287,23 @@ page_3_layout = html.Div([
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets, suppress_callback_exceptions=True)
 app.layout = html.Div([
     dcc.Location(id="url", refresh=False),
+    navbar_component,  # Include the navbar component here
+    html.Div([
+        html.H1("Rat Behavior Analysis Dashboard", style={
+            "textAlign": "center", 
+            "fontFamily": "American Typewriter, serif", 
+            "fontSize": "36px", 
+            "marginTop": "10px",
+            "marginBottom": "20px", 
+            "textTransform": "uppercase", 
+            "color": "rgb(95, 70, 144)",
+            "wordSpacing": "15px", 
+            "letterSpacing": "5px",
+            "backgroundColor": "rgba(29, 105, 150, 0.5)",  # Add background color
+            "padding": "10px",  # Add padding for better appearance
+            "borderRadius": "5px"  # Optional: Add border radius for rounded corners
+        }),
+    ]),
     html.Div(id="page-content")
 ], style={"backgroundColor": "#f7f7f7"})
 

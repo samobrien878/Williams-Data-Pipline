@@ -1,0 +1,21 @@
+#navbar-dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+    left: 0;
+transform: translateX(-50%);  /* Adjust the position to stay within the viewport */
+}
+
+#navbar-dropdown .dropdown-toggle::after {
+    display: none;
+}
+
+#navbar-dropdown .dropdown-item {
+    color: rgb(95, 70, 144);
+
+    .dash-table-container .dash-cell {
+    transition: background-color 0.3s ease;
+}
+
+.dash-table-container .dash-cell:hover {
+    background-color: rgba(29, 105, 150, 0.2);
+}
