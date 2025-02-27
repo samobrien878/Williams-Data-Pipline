@@ -15,7 +15,7 @@ prism = ["rgb(95, 70, 144)", "rgb(29, 105, 150)", "rgb(56, 166, 165)",
          "rgb(11, 64, 112)", "rgb(102, 102, 102)"]
 
 # Use the Cerulean theme for a colorful, professional look
-external_stylesheets = [dbc.themes.CERULEAN]
+external_stylesheets = [dbc.themes.BOOTSTRAP]
 
 # -----------------------------
 # MongoDB Connection and Data
@@ -90,9 +90,9 @@ navbar_style = {
 page_container_style = {
     "backgroundColor": "#FFFFFF",  # light background for readability
     "padding": "20px",
-    "color": "#333",
+    "color": "rgb(95, 70, 144)",
     "minHeight": "100vh",
-    "fontFamily": "Arial, sans-serif"
+    "fontFamily": "TypeWriter, serif"
 }
 
 card_style = {
@@ -144,7 +144,7 @@ navbar_component = dbc.Navbar(
 # Page 1: Rat Behavior Analysis
 page_1_layout = html.Div([
     html.Div([
-        html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px", "fontFamily": "Garamond, serif", "color": "rgb(95, 70, 144)", "textDecoration": "underline"}),
+        html.H3("Data Overview", style={"textAlign": "left", "marginBottom": "10px", "textDecoration": "underline"}),
         dash_table.DataTable(
             id="data-table",
             columns=[{"name": col, "id": col} for col in df.columns],
@@ -169,7 +169,7 @@ page_1_layout = html.Div([
     ]),
     html.Div([
         html.Div([
-            html.H3("Select RatID", style={"color": "#333", "fontFamily": "Garamond, serif"}),
+            html.H3("Select RatID"),
             dcc.Dropdown(
                 id="ratid-dropdown",
                 options=[{"label": "All Rat IDs", "value": "all"}] + rat_id_options,
@@ -180,7 +180,7 @@ page_1_layout = html.Div([
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
-            html.H3("Select Stage", style={"color": "#333", "fontFamily": "Garamond, serif"}),
+            html.H3("Select Stage"),
             dcc.Dropdown(
                 id="stage-dropdown",
                 options=stage_options,
@@ -190,7 +190,7 @@ page_1_layout = html.Div([
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
-            html.H3("Select Metric", style={"color": "#333", "fontFamily": "Garamond, serif"}),
+            html.H3("Select Metric"),
             dcc.Dropdown(
                 id="metric-dropdown",
                 options=[{"label": label, "value": metric} for metric, label in all_metrics.items()],
@@ -201,7 +201,7 @@ page_1_layout = html.Div([
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"})
     ], style={"display": "flex", "justifyContent": "space-between"}),
     html.Div([
-        html.H3("Select Time Range", style={"color": "#333", "fontFamily": "Garamond, serif"}),
+        html.H3("Select Time Range"),
         dcc.RadioItems(
             id="time-range",
             options=[
