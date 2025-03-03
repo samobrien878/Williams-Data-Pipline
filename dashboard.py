@@ -169,7 +169,7 @@ page_1_layout = html.Div([
     ]),
     html.Div([
         html.Div([
-            html.H3("Select Rat ID"),
+            html.H3("Rat ID"),
             dcc.Dropdown(
                 id="ratid-dropdown",
                 options=[{"label": "All Rat IDs", "value": "all"}] + rat_id_options,
@@ -180,7 +180,7 @@ page_1_layout = html.Div([
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
-            html.H3("Select Stage"),
+            html.H3("Stage"),
             dcc.Dropdown(
                 id="stage-dropdown",
                 options=stage_options,
@@ -190,18 +190,18 @@ page_1_layout = html.Div([
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"}),
         html.Div([
-            html.H3("Select Metric"),
+            html.H3("Metric"),
             dcc.Dropdown(
                 id="metric-dropdown",
                 options=[{"label": label, "value": metric} for metric, label in all_metrics.items()],
                 value="FP_total",
                 clearable=False,
-                style={"backgroundColor": "rgba(56, 166, 165, 0.3)", "color": prism[2]}
+                style={"backgroundColor": "rgba(56, 166, 165, 0.3)", "color": prism[2], "marginBottom": "20px"}
             ),
         ], style={"width": "32%", "display": "inline-block", "padding": "10px"})
     ], style={"display": "flex", "justifyContent": "space-between"}),
     html.Div([
-        html.H3("Select Time Range"),
+        html.H3("Time Range"),
         dcc.RadioItems(
             id="time-range",
             options=[
